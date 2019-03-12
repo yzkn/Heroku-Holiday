@@ -1,0 +1,10 @@
+﻿$ mkdir Heroku-Holiday
+$ cd Holiday
+$ pip install Flask
+
+$ nano index.py
+
+$ python index.py
+
+$ nano Procfile
+$ pip freeze > requirements.txt
