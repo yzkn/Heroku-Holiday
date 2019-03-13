@@ -5,6 +5,8 @@ from time import mktime
 
 app = Flask(__name__)
 
+db_last_modified = datetime(2000, 1, 1, 0, 0, 0)
+
 
 @app.route('/', methods=['GET'])
 def index():
@@ -17,11 +19,27 @@ def index():
 
     @after_this_request
     def d_header(response):
-        now = datetime.now() #TODO: キャッシュ利用時は主力する日時を変更
-        response.headers['Last-Modified'] =  format_date_time(mktime(now.timetuple()))
+        response.headers['Last-Modified'] = format_date_time(mktime(db_last_modified.timetuple()))
         return response
     return jsonify(ResultSet=result)
 
+
+@app.route('/update', methods=['GET'])
+def update():
+
+    message = "Updated!"
+    result = {
+        "Result": {
+            "message": message
+        }
+    }
+
+    @after_this_request
+    def d_header(response):
+        db_last_modified = datetime.now()
+        response.headers['Last-Modified'] =  format_date_time(mktime(db_last_modified.timetuple()))
+        return response
+    return jsonify(ResultSet=result)
 
 @app.route('/<date>', methods=['GET'])
 def isHoliday(date):
@@ -38,8 +56,7 @@ def isHoliday(date):
 
     @after_this_request
     def d_header(response):
-        now = datetime.now() #TODO: キャッシュ利用時は主力する日時を変更
-        response.headers['Last-Modified'] =  format_date_time(mktime(now.timetuple()))
+        response.headers['Last-Modified'] =  format_date_time(mktime(db_last_modified.timetuple()))
         return response
     return jsonify(ResultSet=result)
 
