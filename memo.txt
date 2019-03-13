@@ -1,5 +1,11 @@
 ﻿$ mkdir Heroku-Holiday
 $ cd Holiday
+$ conda create -n py37flask python=3.7
+
+PowerShellの場合:
+PS> conda install -n root -c pscondaenvs pscondaenvs
+
+$ activate py37flask
 $ pip install Flask
 
 $ nano index.py
@@ -8,3 +14,5 @@ $ python index.py
 
 $ nano Procfile
 $ pip freeze > requirements.txt
+
+$ deactivate
