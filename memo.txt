@@ -21,4 +21,11 @@ $ git add .
 $ git commit -m 'init'
 $ git push origin master
 
+$ heroku login
+$ heroku create
+$ git push heroku master
+$ heroku scale web=1
+$ heroku open
+
+
 $ deactivate
