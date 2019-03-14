@@ -1,7 +1,8 @@
-from flask import Flask, jsonify, after_this_request
-from wsgiref.handlers import format_date_time
 from datetime import datetime
+from flask import Flask, jsonify, after_this_request
 from time import mktime
+from wsgiref.handlers import format_date_time
+from network_util import download_csv
 
 app = Flask(__name__)
 
@@ -26,8 +27,7 @@ def index():
 
 @app.route('/update', methods=['GET'])
 def update():
-
-    message = "Updated!"
+    message = download_csv()
     result = {
         "Result": {
             "message": message
