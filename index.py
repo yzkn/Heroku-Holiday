@@ -1,10 +1,15 @@
 from datetime import datetime
 from flask import Flask, jsonify, after_this_request
+from flask_sqlalchemy import SQLAlchemy
+from network_util import download_csv
 from time import mktime
 from wsgiref.handlers import format_date_time
-from network_util import download_csv
+import os
 
 app = Flask(__name__)
+app.config['DEBUG'] = True
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or "postgresql://localhost/holiday"
+db = SQLAlchemy(app)
 
 db_last_modified = datetime(2000, 1, 1, 0, 0, 0)
 

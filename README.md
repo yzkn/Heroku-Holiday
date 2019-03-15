@@ -29,8 +29,13 @@ PS> conda install -n root -c pscondaenvs pscondaenvs
 
 ```cmd
 $ activate py37flask
-$ pip install gunicorn
 $ pip install Flask
+$ pip install flask-migrate
+$ pip install flask-sqlalchemy
+$ pip install gunicorn
+$ pip install psycopg2
+$ pip install requests
+$ pip install sqlalchemy
 ```
 
 index.pyの編集
