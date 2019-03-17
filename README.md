@@ -75,6 +75,23 @@ $ heroku scale web=1
 $ heroku open
 ```
 
+ローカルにDBを用意
+
+```powershell
+$ createdb -U postgres -W {パスワード}holiday
+```
+
+マイグレーション
+
+```powershell
+$ python
+```
+
+```python
+from index import db
+db.create_all()
+```
+
 終わったら仮想環境から抜ける
 
 ```cmd
