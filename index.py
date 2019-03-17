@@ -54,9 +54,10 @@ def update():
 @app.route('/<date>', methods=['GET'])
 def isHoliday(date):
     dateStr = '2019-01-01' #TODO: 日付をyyyymmddに正規化
+    dateStr = '20190201'
 
     #TODO: yyyymmddが祝日か判定
-    isHoliday = True
+    isHoliday = holiday_exists(dateStr)
 
     result = {
         "Result": {
@@ -87,6 +88,12 @@ def clear_holidays():
         db.session.delete(holiday)
     db.session.commit()
     return ''
+
+
+def holiday_exists(target):
+    #TODO: 例外処理
+    holidays_count = db.session.query(Holiday).filter_by(date=target).count()
+    return holidays_count > 0
 
 
 class Holiday(db.Model):
