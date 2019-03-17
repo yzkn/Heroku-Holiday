@@ -72,10 +72,16 @@ def isHoliday(date):
 
 
 def add_holidays(holidays):
+    #TODO: 例外処理
+    for k,v in holidays.items():
+        holiday = Holiday(k,v)
+        db.session.add(holiday)
+    db.session.commit()
     return ''
 
 
 def clear_holidays():
+    #TODO: 例外処理
     holidays = Holiday.query.all()
     for holiday in holidays:
         db.session.delete(holiday)
