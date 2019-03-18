@@ -1,3 +1,4 @@
+from date_util import *
 from datetime import datetime
 from flask import Flask, jsonify, after_this_request
 from flask_sqlalchemy import SQLAlchemy
@@ -53,10 +54,9 @@ def update():
 
 @app.route('/<date>', methods=['GET'])
 def isHoliday(date):
-    dateStr = '2019-01-01' #TODO: 日付をyyyymmddに正規化
-    dateStr = '20190201'
-
-    #TODO: yyyymmddが祝日か判定
+    dateStr = normalize_datestring(date)
+    if ''==dateStr:
+        dateStr = datetime.now().strftime('%Y%m%d')
     isHoliday = holiday_exists(dateStr)
 
     result = {

@@ -34,6 +34,7 @@ $ pip install flask-migrate
 $ pip install flask-sqlalchemy
 $ pip install gunicorn
 $ pip install psycopg2
+$ pip install pytest
 $ pip install requests
 $ pip install sqlalchemy
 ```
@@ -90,6 +91,12 @@ $ python
 ```python
 from index import db
 db.create_all()
+```
+
+pytestの実行
+
+```cmd
+$ pytest .\tests\test_date_util.py
 ```
 
 終わったら仮想環境から抜ける

@@ -1,0 +1,14 @@
+[
+  "tests/test_date_util.py::test_normalize_datestring_str_yyyymmdd",
+  "tests/test_date_util.py::test_normalize_datestring_str_yymmdd",
+  "tests/test_date_util.py::test_normalize_datestring_str_mmdd",
+  "tests/test_date_util.py::test_normalize_datestring_str_yyyymmdd_s",
+  "tests/test_date_util.py::test_normalize_datestring_str_yyyymmdd_h",
+  "tests/test_date_util.py::test_normalize_datestring_str_yymmdd_s",
+  "tests/test_date_util.py::test_normalize_datestring_str_yymmdd_h",
+  "tests/test_date_util.py::test_normalize_datestring_str_mmdd_s",
+  "tests/test_date_util.py::test_normalize_datestring_str_mmdd_h",
+  "tests/test_date_util.py::test_normalize_datestring_int_yyyymmdd",
+  "tests/test_date_util.py::test_normalize_datestring_int_yymmdd",
+  "tests/test_date_util.py::test_normalize_datestring_int_mmdd"
+]
