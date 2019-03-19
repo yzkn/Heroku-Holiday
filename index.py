@@ -101,9 +101,9 @@ class Holiday(db.Model):
     祝日
     """
     __tablename__ = "holidays"
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     date = Column(Unicode(8), unique=True)
-    name = Column(Unicode(255), unique=True)
+    name = Column(Unicode(255), unique=False)
 
     def __init__(self, date, name):
         self.date = date

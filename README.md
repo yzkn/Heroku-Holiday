@@ -99,6 +99,22 @@ pytestの実行
 $ pytest .\tests\test_date_util.py
 ```
 
+Herokuへ反映
+
+```cmd
+$ git push heroku master
+$ heroku addons:add heroku-postgresql
+$ heroku config:set DATABASE_URL="{HerokuのDatabase CredentialsにあるURL}"
+$ heroku run python
+```
+
+```python
+from index import db
+db.create_all()
+from index import db,Holiday
+Holiday.query.all()
+```
+
 終わったら仮想環境から抜ける
 
 ```cmd
