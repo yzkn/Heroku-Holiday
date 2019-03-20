@@ -8,6 +8,7 @@ from time import mktime
 from wsgiref.handlers import format_date_time
 import os
 import sys
+import traceback
 
 db_last_modified = datetime(2000, 1, 1, 0, 0, 0)
 
@@ -17,8 +18,10 @@ try:
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or "postgresql://postgres:Passw0rd@localhost:5432/holiday"
     db = SQLAlchemy(app)
-except:
-    print("Exception:", sys.exc_info()[0])
+except Exception as e:
+    t, v, tb = sys.exc_info()
+    print(traceback.format_exception(t,v,tb))
+    print(traceback.format_tb(e.__traceback__))
 
 
 @app.route('/', methods=['GET'])
@@ -33,13 +36,15 @@ def index():
 @app.route('/update', methods=['GET'])
 def update():
     holidays = download_csv()
-    clear_holidays()
-    message = add_holidays(holidays)
-    result = {
-        "Result": {
-            "message": message
-        }
-    }
+    message = {}
+    if len(holidays)>0:
+        cleared = clear_holidays()
+        if cleared:
+            message = add_holidays(holidays)
+        else:
+            message['message'] = 'DB Not Cleared'
+    else:
+        message['message'] = 'CSV Not Downloaded'
 
     @after_this_request
     def d_header(response):
@@ -65,35 +70,55 @@ def isHoliday(date):
 
 
 def add_holidays(holidays):
-    #TODO: 例外処理
-    for k,v in holidays.items():
-        holiday = Holiday(k,v)
-        db.session.add(holiday)
-    db.session.commit()
-    return ''
+    result = {}
+    try:
+        for k,v in holidays.items():
+            holiday = Holiday(k,v)
+            db.session.add(holiday)
+            result[k] = v
+        db.session.commit()
+    except Exception as e:
+        t, v, tb = sys.exc_info()
+        print(traceback.format_exception(t,v,tb))
+        print(traceback.format_tb(e.__traceback__))
+    return result
 
 
 def clear_holidays():
-    #TODO: 例外処理
-    holidays = Holiday.query.all()
-    for holiday in holidays:
-        db.session.delete(holiday)
-    db.session.commit()
-    return ''
+    try:
+        holidays = Holiday.query.all()
+        for holiday in holidays:
+            db.session.delete(holiday)
+        db.session.commit()
+        return True
+    except Exception as e:
+        t, v, tb = sys.exc_info()
+        print(traceback.format_exception(t,v,tb))
+        print(traceback.format_tb(e.__traceback__))
+    return False
 
 
 def holiday_exists(target):
-    #TODO: 例外処理
-    holidays_count = db.session.query(Holiday).filter_by(date=target).count()
-    return holidays_count > 0
+    try:
+        holidays_count = db.session.query(Holiday).filter_by(date=target).count()
+        return holidays_count > 0
+    except Exception as e:
+        t, v, tb = sys.exc_info()
+        print(traceback.format_exception(t,v,tb))
+        print(traceback.format_tb(e.__traceback__))
+        return False
 
 
 def read_holidays():
     result = {}
-    #TODO: 例外処理
-    holidays = Holiday.query.all()
-    for holiday in holidays:
-        result[holiday.date] = holiday.name
+    try:
+        holidays = Holiday.query.all()
+        for holiday in holidays:
+            result[holiday.date] = holiday.name
+    except Exception as e:
+        t, v, tb = sys.exc_info()
+        print(traceback.format_exception(t,v,tb))
+        print(traceback.format_tb(e.__traceback__))
     return result
 
 

@@ -4,8 +4,20 @@ from datetime import datetime
 since_year = 69
 
 def remove_slash_from_datestring(date):
-        dateparts = date.split('/')
-        return '%04d%02d%02d' % (int(dateparts[0]),int(dateparts[1]),int(dateparts[2]))
+    if date is not None:
+        if date != '':
+            if date.find('/') > -1:
+                dateparts = date.split('/')
+                if 3 == len(dateparts):
+                    return '%04d%02d%02d' % (int(dateparts[0]),int(dateparts[1]),int(dateparts[2]))
+                else:
+                    return ''
+            else:
+                return ''
+        else:
+            return ''
+    else:
+        return ''
 
 def normalize_datestring(date):
     """
@@ -24,7 +36,6 @@ def normalize_datestring(date):
                     # yyyy-mm-dd
                     darr = date.split('-')
                     result = '%04d%02d%02d' % (int(darr[0]) , int(darr[1]) , int(darr[2]))
-                pass
         if 8 == len(date):
             if date.find('/') > -1:
                 if 3 == len(date.split('/')):
