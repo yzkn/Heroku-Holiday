@@ -7,31 +7,27 @@ from sqlalchemy import Column, Integer, Unicode, UnicodeText, ForeignKey
 from time import mktime
 from wsgiref.handlers import format_date_time
 import os
-
-
-app = Flask(__name__)
-app.config['DEBUG'] = True
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or "postgresql://postgres:Passw0rd@localhost:5432/holiday"
-db = SQLAlchemy(app)
+import sys
 
 db_last_modified = datetime(2000, 1, 1, 0, 0, 0)
+
+try:
+    app = Flask(__name__)
+    app.config['DEBUG'] = True
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or "postgresql://postgres:Passw0rd@localhost:5432/holiday"
+    db = SQLAlchemy(app)
+except:
+    print("Exception:", sys.exc_info()[0])
 
 
 @app.route('/', methods=['GET'])
 def index():
-    message = "Hi!"
-    result = {
-        "Result": {
-            "message": message
-        }
-    }
-
     @after_this_request
     def d_header(response):
         response.headers['Last-Modified'] = format_date_time(mktime(db_last_modified.timetuple()))
         return response
-    return jsonify(ResultSet=result)
+    return jsonify(ResultSet=read_holidays())
 
 
 @app.route('/update', methods=['GET'])
@@ -57,12 +53,8 @@ def isHoliday(date):
     dateStr = normalize_datestring(date)
     if ''==dateStr:
         dateStr = datetime.now().strftime('%Y%m%d')
-    isHoliday = holiday_exists(dateStr)
-
     result = {
-        "Result": {
-            dateStr: isHoliday
-        }
+        dateStr: holiday_exists(dateStr)
     }
 
     @after_this_request
@@ -96,21 +88,30 @@ def holiday_exists(target):
     return holidays_count > 0
 
 
+def read_holidays():
+    result = {}
+    #TODO: 例外処理
+    holidays = Holiday.query.all()
+    for holiday in holidays:
+        result[holiday.date] = holiday.name
+    return result
+
+
 class Holiday(db.Model):
     """
     祝日
     """
     __tablename__ = "holidays"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    date = Column(Unicode(8), unique=True)
-    name = Column(Unicode(255), unique=False)
+    date = Column(Unicode(8), unique=True, nullable=False)
+    name = Column(Unicode(255), unique=False, nullable=False)
 
     def __init__(self, date, name):
         self.date = date
         self.name = name
 
     def __repr__(self):
-        return '<Holiday %r>' % self.name
+        return '<Holiday {}:{}>'.format(self.date, self.name)
 
 if __name__ == '__main__':
     app.run()
