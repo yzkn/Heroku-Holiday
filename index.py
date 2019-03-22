@@ -1,5 +1,6 @@
 from date_util import *
 from datetime import datetime
+from flasgger import Swagger, swag_from
 from flask import Flask, jsonify, after_this_request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -20,6 +21,7 @@ try:
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or "postgresql://postgres:Passw0rd@localhost:5432/holiday"
     db = SQLAlchemy(app)
     CORS(app)
+    swagger = Swagger(app)
 except Exception as e:
     t, v, tb = sys.exc_info()
     print(traceback.format_exception(t,v,tb))
@@ -28,6 +30,9 @@ except Exception as e:
 
 @app.route('/', methods=['GET'])
 def index():
+    """
+    file: swagger.yaml
+    """
     @after_this_request
     def d_header(response):
         response.headers['Last-Modified'] = format_date_time(mktime(db_last_modified.timetuple()))
@@ -37,6 +42,9 @@ def index():
 
 @app.route('/update', methods=['GET'])
 def update():
+    """
+    file: swagger.yaml
+    """
     holidays = download_csv()
     message = {}
     if len(holidays)>0:
@@ -58,6 +66,9 @@ def update():
 
 @app.route('/<date>', methods=['GET'])
 def isHoliday(date):
+    """
+    file: swagger.yaml
+    """
     dateStr = normalize_datestring(date)
     if ''==dateStr:
         dateStr = datetime.now().strftime('%Y%m%d')
