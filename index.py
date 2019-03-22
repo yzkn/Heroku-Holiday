@@ -1,6 +1,7 @@
 from date_util import *
 from datetime import datetime
 from flask import Flask, jsonify, after_this_request
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from network_util import download_csv
 from sqlalchemy import Column, Integer, Unicode, UnicodeText, ForeignKey
@@ -18,6 +19,7 @@ try:
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or "postgresql://postgres:Passw0rd@localhost:5432/holiday"
     db = SQLAlchemy(app)
+    CORS(app)
 except Exception as e:
     t, v, tb = sys.exc_info()
     print(traceback.format_exception(t,v,tb))
@@ -52,6 +54,7 @@ def update():
         response.headers['Last-Modified'] =  format_date_time(mktime(db_last_modified.timetuple()))
         return response
     return jsonify(ResultSet=message)
+
 
 @app.route('/<date>', methods=['GET'])
 def isHoliday(date):

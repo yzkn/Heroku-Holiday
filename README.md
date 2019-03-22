@@ -30,6 +30,7 @@ PS> conda install -n root -c pscondaenvs pscondaenvs
 ```cmd
 $ activate py37flask
 $ pip install Flask
+$ pip install flask-cors
 $ pip install flask-migrate
 $ pip install flask-sqlalchemy
 $ pip install gunicorn
