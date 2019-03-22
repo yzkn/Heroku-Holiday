@@ -1,0 +1,102 @@
+swagger: "2.0"
+info:
+  description: "The definition document of [YA-androidapp/Heroku-Holiday](https://github.com/YA-androidapp/Heroku-Holiday)"
+  version: "1.0.0"
+  title: "Swagger Heroku-Holiday"
+  termsOfService: "https://github.com/YA-androidapp/Heroku-Holiday/blob/master/README.md"
+  contact:
+    email: "YA-androidapp@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "holid.herokuapp.com"
+basePath: "/"
+tags:
+- name: "holiday"
+  description: "Operations about holiday"
+  externalDocs:
+    description: "Find out more about this api"
+    url: "https://github.com/YA-androidapp/Heroku-Holiday/blob/master/README.md"
+schemes:
+- "https"
+paths:
+  /:
+    get:
+      tags:
+      - "holiday"
+      summary: "Get all holidays"
+      description: ""
+      operationId: "/"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Holiday"
+  /{date}:
+    get:
+      tags:
+      - "holiday"
+      summary: "Check if a day is a holiday"
+      description: ""
+      operationId: "/date"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "date"
+        in: "path"
+        description: "Date (yyyy/mm/dd or yyyy-mm-dd or yyyymmdd)"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "boolean"
+        400:
+          description: "Invalid parameter supplied"
+  /update:
+    get:
+      tags:
+      - "holiday"
+      summary: "Retrieve data from server and update the database"
+      description: ""
+      operationId: "/update"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Holiday"
+definitions:
+  Holiday:
+    type: "object"
+    required:
+    - "date"
+    - "name"
+    properties:
+      date:
+        type: "string"
+      name:
+        type: "string"
+    xml:
+      name: "Holiday"
+  ApiResponse:
+    type: "object"
+    properties:
+      Resultset:
+        type: "array"
+        xml:
+          name: "tag"
+          wrapped: true
+        items:
+          $ref: "#/definitions/Holiday"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
