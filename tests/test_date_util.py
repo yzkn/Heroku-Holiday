@@ -1,3 +1,8 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2019 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
+
 import sys, os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 from date_util import normalize_datestring
