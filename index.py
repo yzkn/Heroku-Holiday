@@ -5,7 +5,6 @@
 
 from date_util import *
 from datetime import datetime
-# from flasgger import Swagger, swag_from
 from flask import Flask, jsonify, after_this_request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
@@ -24,21 +23,18 @@ try:
     app.config['DEBUG'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-        'DATABASE_URL') or "postgresql://postgres:Passw0rd@localhost:5432/holiday"
+        'DATABASE_URL') or "postgresql://postgres:Passw0rdPassw0rd@localhost:5432/holiday"
     db = SQLAlchemy(app)
     CORS(app)
-    # swagger = Swagger(app)
 except Exception as e:
     t, v, tb = sys.exc_info()
     print(traceback.format_exception(t, v, tb))
     print(traceback.format_tb(e.__traceback__))
 
 
-@app.route('/', methods=['GET'])
+@app.route('/')
 def index():
-    # """
-    # file: swagger.yaml
-    # """
+    print('index()')
     @after_this_request
     def d_header(response):
         response.headers['Last-Modified'] = format_date_time(
@@ -47,15 +43,15 @@ def index():
     return jsonify(ResultSet=read_holidays())
 
 
-@app.route('/update', methods=['GET'])
+@app.route('/update')
 def update():
-    # """
-    # file: swagger.yaml
-    # """
+    print('update()')
     holidays = download_csv()
     message = {}
+    print('update() len(holidays): {}'.format(len(holidays)))
     if len(holidays) > 0:
         cleared = clear_holidays()
+        print('update() cleared: {}'.format(cleared))
         if cleared:
             message = add_holidays(holidays)
         else:
@@ -72,24 +68,21 @@ def update():
     return jsonify(ResultSet=message)
 
 
-@app.route('/<date>', methods=['GET'])
-def isHoliday(date):
-    # """
-    # file: swagger.yaml
-    # """
-    dateStr = normalize_datestring(date)
-    if '' == dateStr:
-        dateStr = datetime.now().strftime('%Y%m%d')
-    result = {
-        dateStr: holiday_exists(dateStr)
-    }
-
+@app.route('/<date>')
+def filterHoliday(date):
+    print('filterHoliday({})'.format(date))
     @after_this_request
     def d_header(response):
         response.headers['Last-Modified'] = format_date_time(
             mktime(db_last_modified.timetuple()))
         return response
-    return jsonify(ResultSet=result)
+    if date and 0 < len(normalize_datestring(date)):
+        print('filterHoliday({}) normalize_datestring(date): '.format(
+            date, normalize_datestring(date)))
+        return jsonify(ResultSet=filtered_holidays(date))
+    else:
+        print('filterHoliday({}) else'.format(date))
+        return jsonify(ResultSet=read_holidays())
 
 
 def add_holidays(holidays):
@@ -121,22 +114,12 @@ def clear_holidays():
     return False
 
 
-def holiday_exists(target):
-    try:
-        holidays_count = db.session.query(
-            Holiday).filter_by(date=target).count()
-        return holidays_count > 0
-    except Exception as e:
-        t, v, tb = sys.exc_info()
-        print(traceback.format_exception(t, v, tb))
-        print(traceback.format_tb(e.__traceback__))
-        return False
-
-
 def read_holidays():
+    print('read_holidays()')
     result = {}
     try:
         holidays = Holiday.query.all()
+        print('read_holidays() holidays: ' + str(holidays))
         for holiday in holidays:
             result[holiday.date] = holiday.name
     except Exception as e:
@@ -147,9 +130,9 @@ def read_holidays():
 
 
 def filtered_holidays(date):
+    print('filtered_holidays({})'.format(date))
     dateStr = normalize_filterstring(date)
-    if not dateStr:
-        dateStr = datetime.now().strftime('%Y%m%d')
+    print('filtered_holidays({}) dateStr: {}'.format(date, dateStr))
 
     result = {}
     try:
@@ -182,4 +165,7 @@ class Holiday(db.Model):
 
 
 if __name__ == '__main__':
+    print(app.url_map)
+    app.debug = True
+    app.url_map.strict_slashes = False
     app.run()
