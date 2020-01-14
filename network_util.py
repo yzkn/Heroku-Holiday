@@ -1,3 +1,8 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2020 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
+
 from date_util import *
 import csv
 import re
@@ -7,6 +12,7 @@ import traceback
 import urllib
 
 uri_caocsv = 'https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv'
+
 
 def download_csv():
     result = {}
@@ -21,12 +27,13 @@ def download_csv():
                 key = remove_slash_from_datestring(r[0])
                 result[key] = r[1]
                 print(key + ': ' + r[1])
-                count+=1
+                count += 1
         except Exception as e:
             t, v, tb = sys.exc_info()
-            print(traceback.format_exception(t,v,tb))
+            print(traceback.format_exception(t, v, tb))
             print(traceback.format_tb(e.__traceback__))
     return result
+
 
 def uri_exists(url):
     try:
@@ -41,6 +48,6 @@ def uri_exists(url):
                 return False
     except Exception as e:
         t, v, tb = sys.exc_info()
-        print(traceback.format_exception(t,v,tb))
+        print(traceback.format_exception(t, v, tb))
         print(traceback.format_tb(e.__traceback__))
         return False

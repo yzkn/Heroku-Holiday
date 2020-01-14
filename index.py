@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2019 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
+# Copyright (c) 2020 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
 
 from date_util import *
 from datetime import datetime
@@ -23,7 +23,7 @@ try:
     app.config['DEBUG'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-        'DATABASE_URL') or "postgresql://postgres:Passw0rdPassw0rd@localhost:5432/holiday"
+        'DATABASE_URL') or "postgresql://postgres:Passw0rd@localhost:5432/holiday"
     db = SQLAlchemy(app)
     CORS(app)
 except Exception as e:

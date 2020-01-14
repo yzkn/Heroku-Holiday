@@ -1,7 +1,8 @@
 # Heroku-Holiday
+
 ---
 
-Heroku上で祝日API
+Heroku 上で祝日 API
 
 ## 手順
 
@@ -19,7 +20,7 @@ $ git init
 $ conda create -n py37flask python=3.7
 ```
 
-PowerShellの場合、`activate`実行前に以下のコマンドを実行
+PowerShell の場合、`activate`実行前に以下のコマンドを実行
 
 ```powershell
 PS> conda install -n root -c pscondaenvs pscondaenvs
@@ -40,7 +41,7 @@ $ pip install requests
 $ pip install sqlalchemy
 ```
 
-index.pyの編集
+index.py の編集
 
 ```cmd
 $ nano index.py
@@ -67,7 +68,7 @@ $ git commit -m 'init'
 $ git push origin master
 ```
 
-Herokuにプッシュ
+Heroku にプッシュ
 
 ```cmd
 $ heroku login
@@ -77,7 +78,7 @@ $ heroku scale web=1
 $ heroku open
 ```
 
-ローカルにDBを用意
+ローカルに DB を用意
 
 ```powershell
 $ createdb -U postgres -W {パスワード}holiday
@@ -94,13 +95,13 @@ from index import db
 db.create_all()
 ```
 
-pytestの実行
+pytest の実行
 
 ```cmd
 $ pytest .\tests\test_date_util.py
 ```
 
-Herokuへ反映
+Heroku へ反映
 
 ```cmd
 $ git push heroku master
@@ -124,4 +125,4 @@ $ deactivate
 
 ---
 
-Copyright (c) 2019 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
+Copyright (c) 2020 YA-androidapp(https://github.com/YA-androidapp) All rights reserved.
