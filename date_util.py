@@ -8,13 +8,14 @@ from datetime import datetime
 
 since_year = 69
 
+
 def remove_slash_from_datestring(date):
     if date is not None:
         if date != '':
             if date.find('/') > -1:
                 dateparts = date.split('/')
                 if 3 == len(dateparts):
-                    return '%04d%02d%02d' % (int(dateparts[0]),int(dateparts[1]),int(dateparts[2]))
+                    return '%04d%02d%02d' % (int(dateparts[0]), int(dateparts[1]), int(dateparts[2]))
                 else:
                     return ''
             else:
@@ -23,6 +24,7 @@ def remove_slash_from_datestring(date):
             return ''
     else:
         return ''
+
 
 def normalize_datestring(date):
     """
@@ -35,12 +37,14 @@ def normalize_datestring(date):
                 if 3 == len(date.split('/')):
                     # yyyy/mm/dd
                     darr = date.split('/')
-                    result = '%04d%02d%02d' % (int(darr[0]) , int(darr[1]) , int(darr[2]))
+                    result = '%04d%02d%02d' % (
+                        int(darr[0]), int(darr[1]), int(darr[2]))
             elif date.find('-') > -1:
                 if 3 == len(date.split('-')):
                     # yyyy-mm-dd
                     darr = date.split('-')
-                    result = '%04d%02d%02d' % (int(darr[0]) , int(darr[1]) , int(darr[2]))
+                    result = '%04d%02d%02d' % (
+                        int(darr[0]), int(darr[1]), int(darr[2]))
         if 8 == len(date):
             if date.find('/') > -1:
                 if 3 == len(date.split('/')):
@@ -51,7 +55,8 @@ def normalize_datestring(date):
                         p_year = 1900 + int(darr[0])
                     else:
                         p_year = 2000 + int(darr[0])
-                    result = '%04d%02d%02d' % (int(p_year) , int(darr[1]) , int(darr[2]))
+                    result = '%04d%02d%02d' % (
+                        int(p_year), int(darr[1]), int(darr[2]))
             elif date.find('-') > -1:
                 if 3 == len(date.split('-')):
                     # yy/mm/dd
@@ -61,7 +66,8 @@ def normalize_datestring(date):
                         p_year = 1900 + int(darr[0])
                     else:
                         p_year = 2000 + int(darr[0])
-                    result = '%04d%02d%02d' % (int(p_year) , int(darr[1]) , int(darr[2]))
+                    result = '%04d%02d%02d' % (
+                        int(p_year), int(darr[1]), int(darr[2]))
             elif date.isdecimal():
                 # yyyymmdd
                 result = date
@@ -75,25 +81,27 @@ def normalize_datestring(date):
                     p_year = 1900 + int(yy)
                 else:
                     p_year = 2000 + int(yy)
-                result = '%04d%04d' % (int(p_year) , int(mmdd))
+                result = '%04d%04d' % (int(p_year), int(mmdd))
         elif 5 == len(date):
             if date.find('/') > -1:
                 if 2 == len(date.split('/')):
                     # mm/dd
                     darr = date.split('/')
                     s_year = datetime.now().strftime('%Y')
-                    result = '%04d%02d%02d' % (int(s_year) , int(darr[0]) , int(darr[1]))
+                    result = '%04d%02d%02d' % (
+                        int(s_year), int(darr[0]), int(darr[1]))
             elif date.find('-') > -1:
                 if 2 == len(date.split('-')):
                     # mm-dd
                     darr = date.split('-')
                     s_year = datetime.now().strftime('%Y')
-                    result = '%04d%02d%02d' % (int(s_year) , int(darr[0]) , int(darr[1]))
+                    result = '%04d%02d%02d' % (
+                        int(s_year), int(darr[0]), int(darr[1]))
         elif 4 == len(date):
             if date.isdecimal():
                 # mmdd
                 s_year = datetime.now().strftime('%Y')
-                result = '%04d%04d' % (int(s_year) , int(date))
+                result = '%04d%04d' % (int(s_year), int(date))
     elif type(date) is int:
         if 8 == len(str(date)):
             # yyyymmdd
@@ -107,12 +115,45 @@ def normalize_datestring(date):
                 p_year = 1900 + int(yy)
             else:
                 p_year = 2000 + int(yy)
-            result = '%04d%04d' % (p_year , mmdd)
+            result = '%04d%04d' % (p_year, mmdd)
         elif 4 == len(str(date)) or 3 == len(str(date)):
             # mmdd
             s_year = datetime.now().strftime('%Y')
-            result = '%04d%04d' % (int(s_year) , date)
-    if ''!=result:
+            result = '%04d%04d' % (int(s_year), date)
+    if '' != result:
+        return str(result)
+    else:
+        return ''
+
+
+def normalize_filterstring(date):
+    """
+    桁数で条件分岐して前方一致検索用に正規化
+    """
+    result = ''
+    if type(date) is str:
+        if 8 == len(date):
+            if date.isdecimal():
+                # yyyymmdd
+                result = '%08d' % (int(date))
+        if 6 == len(date):
+            if date.isdecimal():
+                # yyyymm
+                result = '%06d' % (int(date))
+        if 4 == len(date):
+            if date.isdecimal():
+                # yyyy
+                result = '%04d' % (int(date))
+        if 2 == len(date):
+            if date.isdecimal():
+                # yy
+                p_year = ''
+                if int(date) > since_year:
+                    p_year = 1900 + int(date)
+                else:
+                    p_year = 2000 + int(date)
+                result = '%04d' % (int(p_year))
+    if '' != result:
         return str(result)
     else:
         return ''
